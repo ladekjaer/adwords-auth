@@ -33,7 +33,7 @@ module.exports = function(clientId, clientSecret, redirectUri, callback) {
                 for (var i = 0; i < sockets.length; i++) {
                     sockets[i].destroy();
                 }
-                callback(err, tokens);
+                callback(err, JSON.parse(tokens));
             });
         }
     });
