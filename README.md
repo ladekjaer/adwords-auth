@@ -9,15 +9,23 @@ First get module via npm
 
     $ npm install adwords-auth
 
-Use the module in your code
-
+Get both the refresh and the access token:
 ``` javascript
 var auth = require('adwords-auth');
-auth(clientId, clientSecret, redirectUri, function(err, tokens) {
+auth.getTokens(clientId, clientSecret, redirectUri, function(err, tokens) {
     if (err) throw err;
     console.log(tokens);
 });
 ```
+Get a new access token
+``` javascript
+var auth = require('adwords-auth');
+auth.refresh(clientId, clientSecret, refreshToken, function(err, token) {
+    if (err) throw err;
+    console.log(token);
+});
+```
+
 
 ###License
 
