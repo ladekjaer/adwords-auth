@@ -13,13 +13,13 @@ var options = {
     }
 };
 
-var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
+
+module.exports.getTokens = function(clientId, clientSecret, redirectUri, callback) {
+    var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
     authRequestUrl += '?scope=' + encodeURIComponent('https://adwords.google.com/api/adwords');
     authRequestUrl += '&response_type=code';
     authRequestUrl += '&access_type=offline';
     authRequestUrl += '&approval_prompt=force';
-
-module.exports = function(clientId, clientSecret, redirectUri, callback) {
     authRequestUrl += '&client_id=' + clientId;
     authRequestUrl += '&redirect_uri=' + encodeURIComponent(redirectUri);
 
@@ -47,22 +47,42 @@ module.exports = function(clientId, clientSecret, redirectUri, callback) {
     open(authRequestUrl);
 }
 
+module.exports.refresh = function(clientId, clientSecret, redirectUri, refreshToken, callback) {
+    var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
+    var request = https.request(options, function(response) {
+        response.setEncoding('utf8');
+        response.on('data', function(chunk) {
+            callback(null, chunk);
+            return;
+        });
+    });
+    request.on('error', function(err) {
+        callback(err, null);
+        return;
+    });
+    request.write('client_id=' + clientId);
+    request.write('&client_secret=' + clientSecret);
+    request.write('&refresh_token=' + refreshToken);
+    request.write('&grant_type=refresh_token');
+    request.end();
+}
+
 function getTokens(clientId, clientSecret, redirectUri, authorizationCode, callback) {
-            var request = https.request(options, function(response) {
-                response.setEncoding('utf8');
-                response.on('data', function(chunk) {
-                    callback(null, chunk);
-                    return;
-                });
-            });
-            request.on('error', function(err) {
-                callback(err, null);
-                return;
-            });
-            request.write('code=' + authorizationCode);
-            request.write('&client_id=' + clientId);
-            request.write('&client_secret=' + clientSecret);
-            request.write('&redirect_uri=' + redirectUri);
-            request.write('&grant_type=authorization_code');
-            request.end();
+    var request = https.request(options, function(response) {
+        response.setEncoding('utf8');
+        response.on('data', function(chunk) {
+            callback(null, chunk);
+            return;
+        });
+    });
+    request.on('error', function(err) {
+        callback(err, null);
+        return;
+    });
+    request.write('code=' + authorizationCode);
+    request.write('&client_id=' + clientId);
+    request.write('&client_secret=' + clientSecret);
+    request.write('&redirect_uri=' + redirectUri);
+    request.write('&grant_type=authorization_code');
+    request.end();
 }
