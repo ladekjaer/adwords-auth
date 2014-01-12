@@ -47,7 +47,7 @@ module.exports.getTokens = function(clientId, clientSecret, redirectUri, callbac
     open(authRequestUrl);
 }
 
-module.exports.refresh = function(clientId, clientSecret, redirectUri, refreshToken, callback) {
+module.exports.refresh = function(clientId, clientSecret, refreshToken, callback) {
     var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
     var request = https.request(options, function(response) {
         response.setEncoding('utf8');
