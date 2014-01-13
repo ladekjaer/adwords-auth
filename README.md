@@ -9,7 +9,7 @@ First get module via npm
 
     $ npm install adwords-auth
 
-Get both the refresh and the access token:
+Get both the refresh and the access token (redirectUri could be e.g. http://localhost:3000):
 ``` javascript
 var auth = require('adwords-auth');
 auth.getTokens(clientId, clientSecret, redirectUri, function(err, tokens) {
