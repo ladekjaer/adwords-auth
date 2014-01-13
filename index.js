@@ -52,7 +52,7 @@ module.exports.refresh = function(clientId, clientSecret, refreshToken, callback
     var request = https.request(options, function(response) {
         response.setEncoding('utf8');
         response.on('data', function(chunk) {
-            callback(null, chunk);
+            callback(null, JSON.parse(chunk));
             return;
         });
     });
