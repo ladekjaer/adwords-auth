@@ -13,8 +13,8 @@ var options = {
     }
 };
 
-
 module.exports.getTokens = function(clientId, clientSecret, redirectUri, callback) {
+    var time = new Date().getTime();
     var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
     authRequestUrl += '?scope=' + encodeURIComponent('https://adwords.google.com/api/adwords');
     authRequestUrl += '&response_type=code';
@@ -33,7 +33,9 @@ module.exports.getTokens = function(clientId, clientSecret, redirectUri, callbac
                 for (var i = 0; i < sockets.length; i++) {
                     sockets[i].destroy();
                 }
-                callback(err, JSON.parse(tokens));
+                var tokens = JSON.parse(tokens);
+                tokens.expires = time + tokens.expires_in * 1000;
+                callback(err, tokens);
             });
         }
     });
@@ -48,11 +50,14 @@ module.exports.getTokens = function(clientId, clientSecret, redirectUri, callbac
 }
 
 module.exports.refresh = function(clientId, clientSecret, refreshToken, callback) {
+    var time = new Date().getTime();
     var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
     var request = https.request(options, function(response) {
         response.setEncoding('utf8');
-        response.on('data', function(chunk) {
-            callback(null, JSON.parse(chunk));
+        response.on('data', function(token) {
+            token = JSON.parse(token);
+            token.expires = time + token.expires_in * 1000;
+            callback(null, token);
             return;
         });
     });
