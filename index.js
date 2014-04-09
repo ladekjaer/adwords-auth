@@ -54,7 +54,11 @@ module.exports.refresh = function(clientId, clientSecret, refreshToken, callback
     var authRequestUrl = 'https://accounts.google.com/o/oauth2/auth';
     var request = https.request(options, function(response) {
         response.setEncoding('utf8');
-        response.on('data', function(token) {
+        var token = '';
+        response.on('data', function(chunk) {
+            token += chunk;
+        });
+        response.on('end', function() {
             token = JSON.parse(token);
             token.expires = time + token.expires_in * 1000;
             callback(null, token);
