@@ -1,7 +1,7 @@
 {
   "name": "adwords-auth",
   "description": "Gets access and refresh tokens to use with Google AdWords API.",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "dependencies": {
     "open": "0.0.5"
   }
